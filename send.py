@@ -8,6 +8,8 @@ MESSAGE = "Alguma Messagem"
 connection = pika.BlockingConnection(pika.ConnectionParameters(host = HOST))
 channel = connection.channel()
 
+channel.queue_declare(queue = QUEUE_NAME)
+
 
 for i in range(1, 1000):
     channel.basic_publish(exchange="", routing_key = QUEUE_NAME, body=MESSAGE)

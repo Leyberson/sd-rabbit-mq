@@ -1,4 +1,4 @@
-from reciever import Receiver
+from receiver import Receiver
 import threading as th
 from ilumination.lamp import Lamp
 
