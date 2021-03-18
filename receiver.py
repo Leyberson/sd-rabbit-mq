@@ -1,5 +1,5 @@
 import pika
-
+import threading
 
 class Receiver:
     def __init__(self, queue_name, host='localhost'):
@@ -9,7 +9,9 @@ class Receiver:
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host = self.host))
         self.channel = self.connection.channel()
 
-        self.start_consuming()
+        th = threading.Thread(target = self.start_consuming)
+
+        th.start()
 
     def start_consuming(self):
         self.channel.queue_declare(queue = self.queue_name)

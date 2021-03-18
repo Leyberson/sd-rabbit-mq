@@ -1,6 +1,4 @@
 from receiver import Receiver
-import threading as th
-from ilumination.lamp import Lamp
 
 HOST = 'localhost'
 count = 0
