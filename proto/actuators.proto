@@ -1,0 +1,22 @@
+syntax="proto3";
+
+service Actuator{
+    rpc turn_on ( Action ) returns ( Turned ) { };
+    rpc turn_off( Action ) returns ( Turned ) { };
+    rpc change_temp(TempChange)returns(AfterChange){};
+}
+
+message Action {}
+
+message Turned {
+    bool turned = 1;
+}
+
+message TempChange{
+    string change = 1;
+}
+
+message AfterChange{
+    bool turned = 1;
+    int32 temp = 2;
+}
