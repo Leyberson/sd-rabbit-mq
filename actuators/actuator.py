@@ -1,7 +1,7 @@
 import grpc
 from concurrent import futures
-import actuators_pb2
-import actuators_pb2_grpc
+from . import actuators_pb2
+from . import actuators_pb2_grpc
 import time
 import threading
 
