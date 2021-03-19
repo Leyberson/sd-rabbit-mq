@@ -3,14 +3,12 @@ import pika
 import grpc
 import os
 import sys
-import time
 import threading
 
 new_path = os.path.abspath("")
 sys.path.append(new_path)
 
 from actuators import actuators_pb2_grpc, actuators_pb2
-
 
 class Receiver:
     def __init__(self, queue_name, host='localhost'):
