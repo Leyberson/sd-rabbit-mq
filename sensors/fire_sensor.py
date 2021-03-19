@@ -12,7 +12,7 @@ channel.queue_declare(queue = QUEUE_NAME)
 try:
     while True:
         time.sleep(1)
-        message = random.choices(['fire', 'normal'], weights = [5, 95])
+        message = random.choices(['fire', 'normal'], weights = [5, 95], k = 1)[0]
         channel.basic_publish(exchange = "", routing_key = QUEUE_NAME, body = message)
 except KeyboardInterrupt:
     connection.close()
