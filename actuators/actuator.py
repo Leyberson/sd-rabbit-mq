@@ -12,11 +12,11 @@ class Actuator(actuators_pb2_grpc.ActuatorServicer):
 
     def turn_on(self, request, context):
         self.turned = True
-        return self.turned
+        return actuators_pb2.Turned(turned = self.turned)
 
     def turn_off(self, request, context):
         self.turned = False
-        return self.turned
+        return actuators_pb2.Turned(turned = self.turned)
 
 
 class LightActuator(Actuator):
@@ -34,10 +34,10 @@ class AirConditioningActuator(Actuator):
         super().__init__()
 
 
-def serve():
+def serve(port, actuator_name):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers = 1))
-    actuators_pb2_grpc.add_ActuatorServicer_to_server(Actuator(), server)
-    server.add_insecure_port("[::]:50001")
+    exec("actuators_pb2_grpc.add_ActuatorServicer_to_server(" +actuator_name + "(), server)")
+    server.add_insecure_port("[::]:" + port)
     server.start()
     try:
         while True:
@@ -46,6 +46,7 @@ def serve():
     except InterruptedError:
         print('InterruptedError')
         server.stop(0)
+
 
 if __name__ == "__main__":
     serve()

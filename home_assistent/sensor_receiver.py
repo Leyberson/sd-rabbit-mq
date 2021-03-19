@@ -44,7 +44,7 @@ class LightReceiver(Receiver):
             with grpc.insecure_channel('localhost:50001') as channel:
                 stub = actuators_pb2_grpc.ActuatorStub(channel)
                 try:
-                    response = stub.turn_off(actuators_pb2.Turned())
+                    response = stub.turn_off(actuators_pb2.Action())
                     self.grpc_response = response
                 except Exception as e:
                     print("não foi possível se comunicar com o servidor grpc")
@@ -54,9 +54,8 @@ class LightReceiver(Receiver):
             with grpc.insecure_channel('localhost:50001') as channel:
                 stub = actuators_pb2_grpc.ActuatorStub(channel)
                 try:
-                    response = stub.turn_on(actuators_pb2.Turned())
+                    response = stub.turn_on(actuators_pb2.Action())
                     self.grpc_response = response
-                    print(response)
                 except:
                     print("não foi possível se comunicar com o servidor grpc")
 
@@ -67,10 +66,24 @@ class FireReceiver(Receiver):
 
     def callback(self, ch, method, properties, body):
         self.last_message = body.decode()
-        if self.last_message == 'fogo':
-            print("Acionar atuador")
+        if self.last_message == 'fire':
+            with grpc.insecure_channel('localhost:50002') as channel:
+                stub = actuators_pb2_grpc.ActuatorStub(channel)
+                try:
+                    response = stub.turn_on(actuators_pb2.Action())
+                    self.grpc_response = response
+                except Exception as e:
+                    print("não foi possível se comunicar com o servidor grpc")
+                    print(e)
+
         else:
-            print("Desacionar atuador")
+            with grpc.insecure_channel('localhost:50002') as channel:
+                stub = actuators_pb2_grpc.ActuatorStub(channel)
+                try:
+                    response = stub.turn_off(actuators_pb2.Action())
+                    self.grpc_response = response
+                except:
+                    print("não foi possível se comunicar com o servidor grpc")
 
 
 class AirConditioningReceiver(Receiver):
@@ -79,7 +92,21 @@ class AirConditioningReceiver(Receiver):
 
     def callback(self, ch, method, properties, body):
         self.last_message = body.decode()
-        if int(self.last_message) < 20:
-            print("Aumentar temperatura")
-        elif int(self.last_message) >= 30:
-            print("Ligar ar-condicionado ou baixar a temperatura")
+        if int(self.last_message) < 25:
+            with grpc.insecure_channel('localhost:50003') as channel:
+                stub = actuators_pb2_grpc.ActuatorStub(channel)
+                try:
+                    response = stub.turn_off(actuators_pb2.Action())
+                    self.grpc_response = response
+                except Exception as e:
+                    print("não foi possível se comunicar com o servidor grpc")
+                    print(e)
+
+        elif int(self.last_message) > 30:
+            with grpc.insecure_channel('localhost:50003') as channel:
+                stub = actuators_pb2_grpc.ActuatorStub(channel)
+                try:
+                    response = stub.turn_on(actuators_pb2.Action())
+                    self.grpc_response = response
+                except:
+                    print("não foi possível se comunicar com o servidor grpc")
